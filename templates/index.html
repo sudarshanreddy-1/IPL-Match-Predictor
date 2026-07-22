@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Match Win Predictor</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>🏏 IPL Match Win Predictor</h1>
+        <p class="subtitle">Predict the winning probability of the chasing team.</p>
+
+        <div id="errorBox" class="error-box"></div>
+
+        <form id="predictForm">
+
+            <!-- Teams -->
+
+            <div class="row">
+
+                <div class="input-group">
+                    <label>Batting Team</label>
+
+                    <select id="batting_team" name="batting_team" required>
+
+                        <option value="">Select Batting Team</option>
+
+                        {% for team in teams %}
+                        <option value="{{team}}">{{team}}</option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Bowling Team</label>
+
+                    <select id="bowling_team" name="bowling_team" required>
+
+                        <option value="">Select Bowling Team</option>
+
+                        {% for team in teams %}
+                        <option value="{{team}}">{{team}}</option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- City -->
+
+            <div class="input-group">
+
+                <label>City</label>
+
+                <select id="city" name="city" required>
+
+                    <option value="">Select City</option>
+
+                    {% for city in cities %}
+                    <option value="{{city}}">{{city}}</option>
+                    {% endfor %}
+
+                </select>
+
+            </div>
+            <br/>
+
+            <!-- Target & Score -->
+
+            <div class="row">
+
+                <div class="input-group">
+                    <label>Target</label>
+
+                    <input
+                        type="number"
+                        id="target"
+                        name="target"
+                        min="1"
+                        placeholder="Enter Target"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+
+                    <label>Current Score</label>
+
+                    <input
+                        type="number"
+                        id="score"
+                        name="score"
+                        min="0"
+                        placeholder="Current Score"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Overs Balls Wickets -->
+
+            <div class="row">
+
+                <div class="input-group">
+
+                    <label>Overs</label>
+
+                    <select id="overs" name="overs">
+
+                        {% for i in range(21) %}
+                        <option value="{{i}}">
+                            {{i}}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>Balls</label>
+
+                    <select id="balls" name="balls">
+
+                        {% for i in range(6) %}
+                        <option value="{{i}}">
+                            {{i}}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>Wickets Lost</label>
+
+                    <select id="wickets" name="wickets">
+
+                        {% for i in range(10) %}
+                        <option value="{{i}}">
+                            {{i}}
+                        </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <button id="predictBtn" type="submit">
+
+                Predict Winning Probability
+
+            </button>
+
+        </form>
+
+
+        <!-- Loading -->
+
+        <div id="loading" class="loading">
+
+            <div class="spinner"></div>
+
+            <p>Predicting...</p>
+
+        </div>
+        <div id="summaryCard" class="summary-card">
+
+    <h2>📊 Match Summary</h2>
+
+    <div class="summary-grid">
+
+        <div>
+            <span>Target</span>
+            <strong id="sumTarget"></strong>
+        </div>
+
+        <div>
+            <span>Score</span>
+            <strong id="sumScore"></strong>
+        </div>
+
+        <div>
+            <span>Overs</span>
+            <strong id="sumOvers"></strong>
+        </div>
+
+        <div>
+            <span>Runs Left</span>
+            <strong id="sumRunsLeft"></strong>
+        </div>
+
+        <div>
+            <span>Balls Left</span>
+            <strong id="sumBallsLeft"></strong>
+        </div>
+
+        <div>
+            <span>Current RR</span>
+            <strong id="sumCRR"></strong>
+        </div>
+
+        <div>
+            <span>Required RR</span>
+            <strong id="sumRRR"></strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+        <!-- Result -->
+
+        <div id="resultCard" class="result-card">
+
+            <h2>Prediction</h2>
+            <p id="predictionMessage" class="prediction-message"></p>
+
+            <div class="team-result">
+
+                <span id="batTeamName"></span>
+
+                <div class="progress">
+
+                    <div
+                        id="winBar"
+                        class="progress-fill win-fill"
+                    ></div>
+
+                </div>
+
+                <span id="winPercent"></span>
+
+            </div>
+
+
+            <div class="team-result">
+
+                <span id="bowlTeamName"></span>
+
+                <div class="progress">
+
+                    <div
+                        id="loseBar"
+                        class="progress-fill lose-fill"
+                    ></div>
+
+                </div>
+
+                <span id="losePercent"></span>
+
+            </div>
+
+            <button id="resetBtn">
+
+                New Prediction
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+
+</html>
